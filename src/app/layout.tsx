@@ -8,7 +8,7 @@ import Link from 'next/link'
 import './global.css'
 
 const meta = {
-  title: 'Hunter Chang - Website',
+  title: 'Test App - Website',
   description:
     'Sleep deprived father. FE Engineer in China. Lover of Ramen and Kpop',
   image: `${WEBSITE_HOST_URL}/og-preview.jpg`,
@@ -17,7 +17,7 @@ const meta = {
 export const metadata: Metadata = {
   title: {
     default: meta.title,
-    template: '%s | Hunter Chang',
+    template: '%s | Test App',
   },
   description: meta.description,
   openGraph: {
@@ -52,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ThemeProvider attribute="class" defaultTheme="dark">
+        <ThemeProvider attribute="class" defaultTheme="light">
           <header className="py-4">
             <Container>
               <div className="flex items-center justify-between py-6">
@@ -68,8 +68,8 @@ export default function RootLayout({
             <Container>
               <p>
                 Built by{' '}
-                <Link className="link" href="https://twitter.com/hunterhchang">
-                  Hunter Chang
+                <Link className="link" href="https://google.com">
+                  Test App
                 </Link>
               </p>
             </Container>
