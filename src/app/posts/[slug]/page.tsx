@@ -7,6 +7,8 @@ import { useMDXComponent } from 'next-contentlayer/hooks'
 import NextImage from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import Giscus from '@/components/Giscus'
+import ReadingProgressBar from '@/components/ReadingProgressBar'
 
 export async function generateStaticParams() {
   return allPosts.map((post) => ({
@@ -64,6 +66,7 @@ const PostLayout = ({ params }: { params: { slug: string } }) => {
 
   return (
     <div>
+      <ReadingProgressBar />
       <h1>{post.title}</h1>
       <time className="my-4 block text-sm text-zinc-400" dateTime={post.date}>
         {format(parseISO(post.date), 'LLLL d, yyyy')}
@@ -71,6 +74,9 @@ const PostLayout = ({ params }: { params: { slug: string } }) => {
       <article className="prose dark:prose-invert">
         <MDXContent components={mdxComponents} />
       </article>
+
+      <Giscus />
+      
     </div>
   )
 }

@@ -6,27 +6,13 @@ date: 2023-09-16
 
 <Image
   alt={`Bridge`}
-  src={`/images/bridge.jpg`}
+  src={`/images/og-image.jpg`}
   width={1440}
   height={960}
   priority
 />
 
 ### Getting Started
-
-Clone the repo and install the dependencies.
-
-```bash
-git clone https://github.com/ChangoMan/nextjs-mdx-blog.git
-
-cd nextjs-typescript-mdx-blog
-
-npm install
-
-npm run dev
-```
-
-Your new site will be up at http://localhost:3000/
 
 Blog posts can be added to the `posts` directory, in the root folder.
 
@@ -35,3 +21,149 @@ Update the `WEBSITE_HOST_URL` when taking your site live. This lives in `/src/li
 Make sure to update the `sitemap.ts` file, specifically the `const routes` if you add more pages to the website.
 
 Go back [Home](/).
+
+
+
+# 추가한 컴포넌트
+## A. 댓글 달기
+
+1. github 프로젝트에 giscus 설치하기  https://github.com/apps/giscus
+2. component에 Giscus.tsx 추가 <br/>
+아래의 경로에 가서 설치한 프로젝트 (github 저장소)를 입력하고 각종 원하는 초기 설정을 함 https://giscus.app/ko
+  - 그러면 설정사항을 스크립트를 생성해줌
+    <details>
+    <summary> Giscus.tsx 코드보기 </summary>
+    ```tsx
+    'use client';
+
+    import { useEffect, useRef } from 'react';
+
+    export default function Giscus() {
+    const ref = useRef<HTMLDivElement>(null);
+    const theme = 'noborder_light'; 
+    //light_high_contrast, light, light_protanopia, light_tritanopia
+    // preferred_color_scheme, noborder_light
+
+    useEffect(() => {
+        if (!ref.current || ref.current.hasChildNodes()) return;
+        const scriptElem = document.createElement('script');
+        scriptElem.src = 'https://giscus.app/client.js';
+        scriptElem.async = true;
+        scriptElem.crossOrigin = 'anonymous';
+        scriptElem.setAttribute('data-repo', 'sun0lee/nextjs-mdx-blog'); 
+        scriptElem.setAttribute('data-repo-id', 'R_kgDOKWzGaQ'); 
+        scriptElem.setAttribute('data-category', 'General');
+        scriptElem.setAttribute('data-category-id', 'DIC_kwDOKWzGac4CZkDt');
+        scriptElem.setAttribute('data-mapping', 'pathname');
+        scriptElem.setAttribute('data-strict', '0');
+        scriptElem.setAttribute('data-reactions-enabled', '0'); // 0 반응 안남기기 , 1 남기기
+        scriptElem.setAttribute('data-emit-metadata', '0');
+        scriptElem.setAttribute('data-input-position', 'bottom'); //top, bottom
+        scriptElem.setAttribute('data-theme', theme);
+        scriptElem.setAttribute('data-lang', 'ko');
+        {/* scriptElem.setAttribute('data-loading', 'lazy'); */}
+        ref.current.appendChild(scriptElem);
+
+    }, []);
+
+    useEffect(() => {
+        const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+        iframe?.contentWindow?.postMessage({ giscus: { setConfig: { theme } } }, 'https://giscus.app');
+    }, [theme]);
+
+    return <section ref={ref} />;
+    }
+    ```
+    </details>
+
+3. page.tsx 에 컴포넌트 추가하기
+ 각 포스트별 내용을 담고 있는 `<article>` 태그 아래에 댓글 컴포넌트 `<Giscus />` 를 추가한다. 
+
+    <details>
+    <summary> page.tsx 코드보기 </summary>
+      ```tsx
+      const PostLayout = ({ params }: { params: { slug: string } }) => {
+        const post = allPosts.find((post) => post._raw.flattenedPath === params.slug)
+
+        if (!post) {
+          notFound()
+        }
+
+        const MDXContent = useMDXComponent(post.body.code)
+
+        return (
+          <div>
+            <ReadingProgressBar />
+            <h1>{post.title}</h1>
+            <time className="my-4 block text-sm text-zinc-400" dateTime={post.date}>
+              {format(parseISO(post.date), 'LLLL d, yyyy')}
+            </time>
+            <article className="prose dark:prose-invert">
+              <MDXContent components={mdxComponents} />
+            </article>
+
+            <Giscus />
+            
+          </div>
+        )
+      }
+      ```
+   </details>
+
+## B. ProgressBar 추가
+
+1. styled-components 설치하기 
+- Javascript 파일 내에서 CSS를 사용할 수 있게 해주는 대표적인 CSS-in-JS 라이브러리로 React 프레임워크를 주요 대상으로 한 라이브러리 라고 한다. 
+  ```bash
+  yarn add styled-components
+  ```
+- 이렇게 패키지를 추가하는 경우에는 프로젝트 의존성을 다시 설치해야 한다. 
+  ```bash
+  yarn install
+  ```
+
+2. component에 ReadingProgressBar.tsx 추가
+    <details>
+    <summary> ReadingProgressBar.tsx 코드보기 </summary>
+      ```tsx
+      'use client';
+
+      import { useEffect, useState } from 'react';
+      import styled from "styled-components";
+
+      export default function ReadingProgressBar() {
+        const [width, setWidth] = useState(0);
+
+        const scrollHeight = () => {
+          const element = document.documentElement;
+          const ScrollTop = element.scrollTop || document.body.scrollTop;
+          const ScrollHeight = element.scrollHeight || document.body.scrollHeight;
+          const percent = (ScrollTop / (ScrollHeight - element.clientHeight)) * 100;
+          setWidth(percent);
+        };
+
+        useEffect(() => {
+          window.addEventListener('scroll', scrollHeight);
+          return () => window.removeEventListener('scroll', scrollHeight);
+        }, []);
+
+        return (
+          <ProgressBar width={width} />
+        );
+      }
+
+      const ProgressBar = styled.div<{ width: number }>`
+        position: fixed;
+        z-index: 50;
+        top: 0px;
+        left: 0px;
+        height: 3px;
+        border-radius: 0px 3px 0px 0px;
+        background: linear-gradient(90deg, #b8d7ff, #5ba2ff);
+        width: ${(props) => (props.width)}%;
+      `;
+      ```
+      </details>
+
+3. page.tsx 에 컴포넌트 추가하기<br/>
+ `<h1>` 태그 위에 댓글 컴포넌트 `<ReadingProgressBar />` 를 추가한다. 

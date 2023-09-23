@@ -13,10 +13,9 @@ export default function Home() {
   return (
     <div>
       <div className="space-y-7">
-        <h1>Home Page</h1>
+        <h1>테스트 블로그</h1>
         <p>
-          Next.js starter template for your next blog or personal site. Built
-          with:
+          사용된 것들
         </p>
         <ul className="my-6 list-disc space-y-2 pl-4">
           <li>
@@ -47,16 +46,16 @@ export default function Home() {
         </ul>
 
         <Button asChild>
-          <a href="https://github.com/ChangoMan/nextjs-mdx-blog">
+          <a href="https://github.com/sun0lee/nextjs-mdx-blog">
             <Github className="mr-1" /> Get the source code!
           </a>
         </Button>
       </div>
 
       <div className="mt-16">
-        <h2>From the blog</h2>
+        <h2>post</h2>
         <p className="mt-2 leading-8">
-          Blog posts are written with MDX and processed through Contentlayer.
+          Contentlayer로 가져온 블로그 포스트들. Contentlayer는 글 목록을 data묶음으로 가져올수 있도록 만들어준다. 주제별로 구분하는 방법 알아보기!!!
         </p>
       </div>
       <div className="mt-10 space-y-12 border-t border-gray-200 pt-10 dark:border-gray-700">
