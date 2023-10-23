@@ -4,6 +4,7 @@ import { allPosts } from 'contentlayer/generated'
 import { compareDesc } from 'date-fns'
 import { Github } from 'lucide-react'
 import Link from 'next/link'
+import Head from 'next/head'
 
 export default function Home() {
   const posts = allPosts.sort((a, b) =>
@@ -11,6 +12,13 @@ export default function Home() {
   )
 
   return (
+    <>
+    <Head>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#ffffff" />
+    </Head>
     <div>
       <div className="space-y-7">
         <h1>테스트 블로그</h1>
@@ -64,5 +72,6 @@ export default function Home() {
         ))}
       </div>
     </div>
+  </>
   )
 }

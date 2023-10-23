@@ -1,0 +1,86 @@
+---
+title: pwa
+description: 웹 앱 만들기
+date: 2023-10-23
+---
+## PWA란 무엇인가?
+네이티브 앱을 개발하고 유지보수하는 것은 상당히 길고 복잡한 과정이며, 상당한 비용이 소요되는 경우도 많습니다. 다행히 다른 방법이 있습니다. 이 방식은 우리가 웹(web)에서 사용하는 기술과 네이티브 앱의 장점을 결합한 것입니다. 그것은 바로 프로그레시브 웹 앱(progressive web app), 줄여서 PWA라고 부르는 것입니다.
+
+PWA는 프로그레시브 웹 앱(progressive web app)의 줄임말입니다. PWA는 HTML, CSS, 자바스크립트(JavaScript)와 같은 웹 기술로 만드는 앱입니다. 하지만 그 느낌과 기능은 실제 네이티브 앱과 견줄 수 있을 정도로 좋습니다. 몇 가지의 스마트한 기능들을 추가하면, 세상의 그 어떤 웹사이트라도 PWA로 바꿀 수 있습니다. 즉, 네이티브 앱을 개발하는 것은 상당히 어렵지만, PWA는 훨씬 더 빠르게 개발할 수 있다는 것입니다. 또한, 푸시 알림이나 오프라인 지원과 같은 네이티브 앱의 특징들도 전부 제공할 수 있습니다.
+
+#### plugin 추가
+- withPlugins
+- withPWA 
+
+#### next.config.js
+```
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+const withPlugins = require("next-compose-plugins");
+const { withContentlayer } = require('next-contentlayer')
+const withPWA = require('next-pwa');
+
+// module.exports = withContentlayer(nextConfig)
+
+module.exports = withPlugins(
+	[
+		[
+			withPWA,
+			{
+				pwa: {
+					dest: "public",
+				},
+			},
+		],
+    [
+      withContentlayer(nextConfig)
+    ],
+	],
+	nextConfig
+);
+```
+#### public
+- public/icons : icon 생성
+- public/manifest.json 생성
+
+#### page.jsx
+\<Head> 추가  
+```
+import Head from 'next/head'
+
+
+  return (
+    <>
+    <Head>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#ffffff" />
+    </Head>
+    <div>
+    ...
+    </div>
+    </>
+    }
+```
+#### layout.tsx
+```
+export const metadata= {
+    manifest:"/manifest.json",
+    themeColor: "#ffffff",
+}
+
+## 참고한 사이트
+
+- https://noogoonaa.tistory.com/110
+- https://lemontia.tistory.com/1073
+- https://vroomfan.tistory.com/52
+
+- 파비콘 생성 : https://favicomatic.com/ 
+- PWA Manifest Generator : https://www.simicart.com/manifest-generator.html/
+- PWA @ nextjs 13 app Dic : https://github.com/Schular/next-with-pwa
+
+
+
+```

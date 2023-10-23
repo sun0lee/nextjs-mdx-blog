@@ -42,6 +42,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: WEBSITE_HOST_URL,
   },
+  manifest:"/manifest.json",
+  themeColor: "#ffffff",
 }
 
 export default function RootLayout({
