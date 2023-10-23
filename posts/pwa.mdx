@@ -1,5 +1,5 @@
 ---
-title: pwa
+title: PWA (progressive web app)
 description: 웹 앱 만들기
 date: 2023-10-23
 ---
@@ -8,12 +8,14 @@ date: 2023-10-23
 
 PWA는 프로그레시브 웹 앱(progressive web app)의 줄임말입니다. PWA는 HTML, CSS, 자바스크립트(JavaScript)와 같은 웹 기술로 만드는 앱입니다. 하지만 그 느낌과 기능은 실제 네이티브 앱과 견줄 수 있을 정도로 좋습니다. 몇 가지의 스마트한 기능들을 추가하면, 세상의 그 어떤 웹사이트라도 PWA로 바꿀 수 있습니다. 즉, 네이티브 앱을 개발하는 것은 상당히 어렵지만, PWA는 훨씬 더 빠르게 개발할 수 있다는 것입니다. 또한, 푸시 알림이나 오프라인 지원과 같은 네이티브 앱의 특징들도 전부 제공할 수 있습니다.
 
-#### plugin 추가
-- withPlugins
-- withPWA 
+## how to 
 
-#### next.config.js
-```
+#### Plugins 추가
+- Plugins : plugin 여러개 사용하기 `yarn add --dev next-compose-plugins`  
+- PWA  : `yarn add next-pwa`
+
+#### next.config.js 설정
+```js
 /** @type {import('next').NextConfig} */
 const nextConfig = {}
 
@@ -40,15 +42,81 @@ module.exports = withPlugins(
 	nextConfig
 );
 ```
-#### public
-- public/icons : icon 생성
-- public/manifest.json 생성
+#### public에 필요한 자원 추가 
+- public/icons : icon 생성 => [이미지 파일로 icon 생성하기](https://favicomatic.com/)
+- public/manifest.json 생성 => [manifest 생성기](https://www.simicart.com/manifest-generator.html/)
 
-#### page.jsx
-\<Head> 추가  
+<details>
+<summary>manifest.json 코드</summary>
+```json
+{
+  "short_name": "test next app",
+  "name": "next js 블로그 test용",
+  "start_url": "/",
+  "display": "standalone", 
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "./icons/apple-touch-icon-57x57.png",
+      "sizes": "57x57",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/apple-touch-icon-60x60.png",
+      "sizes": "60x60",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/apple-touch-icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/apple-touch-icon-76x76.png",
+      "sizes": "76x76",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/apple-touch-icon-114x114.png",
+      "sizes": "114x114",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/apple-touch-icon-120x120.png",
+      "sizes": "120x120",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/apple-touch-icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/apple-touch-icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/icon",
+      "purpose": "any maskable"
+    }
+  ]
+}
 ```
-import Head from 'next/head'
+</details>
 
+#### meta tag 추가 (page.tsx)
+브라우저가 PWA라는것을 알아채고 manifest에 접근할 수 있도록 메타태그를 적용해야합니다. @\<Head> 추가  
+```tsx
+import Head from 'next/head'
 
   return (
     <>
@@ -65,11 +133,13 @@ import Head from 'next/head'
     }
 ```
 #### layout.tsx
-```
+
+```tsx
 export const metadata= {
     manifest:"/manifest.json",
     themeColor: "#ffffff",
 }
+```
 
 ## 참고한 사이트
 
@@ -81,6 +151,3 @@ export const metadata= {
 - PWA Manifest Generator : https://www.simicart.com/manifest-generator.html/
 - PWA @ nextjs 13 app Dic : https://github.com/Schular/next-with-pwa
 
-
-
-```
