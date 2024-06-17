@@ -1,0 +1,64 @@
+---
+title: java 02 생성자와 가비지 컬렉션
+description: 생성자
+date: 2024-06-14
+---
+
+1. 생성자는 누군가 어떤 클래스 타입에 대해 new를 쓸 때 실행되는 코드 
+    ```java
+    Duck d new Duck();
+    ```
+
+2. 생성자명은 반드시 클래스명과 같아야 함. 리턴타입은 없음.
+    ```java
+    public Duck(int size){
+
+    }
+    ```
+3. 클래스를 만들 때 생성자를 만들지 않으면 컴파일러가 자동 추가해줌. 기본 생성자는 인자가 없는 생성자
+    ```java
+    public Duck() {
+
+    }
+    ```
+4. 인자 목록이 다르면 한 클래스에 생성자 여러 개를 만들 수 있음. (오버로드된 생성자)
+    ```java
+    public Duck() {}
+    public Duck(int size) {}
+    public Duck(String name) {}
+    public Duck(String name, int size) {}
+    ```
+
+## super() : 상위클래스 생성자 호출하기
+    ```java
+    public abstract class Animal {
+      private String name ;
+      public String getName(){
+        return name ;
+      }
+      public Animal(String theName){ //이름을 받아서 그 값을 name 인스턴스 변수에 저장하는 생성자 
+        name = theName ;
+      }
+    }
+    ```
+
+    ```java
+    public class Hippo extends Animal {
+      public Hippo(String name) { 
+        super(name); // 스택 바로 위로 올라가는 Animal 생성자로 이름을 보냄 
+      }
+    }
+    ```
+
+    ```java
+    public class MakeHippo {
+      public static void main(String[] args) {
+        Hippo h = new Hippo("Buffy");
+        System.out.println(h.getName());
+      }
+    }
+    ```
+
+## this : 다른 오버로드된 생성자 호출하기 
+현재 객체에 대한 레퍼런스. 생성자 안에서만 쓸 수 있으며, 생성자의 첫번째 명령문으로만 쓸 수 있다. 
+- super() 또는 this() 를 호출하는 명령문이 들어갈 수는 있음. 둘 다 쓸 수는 없음.

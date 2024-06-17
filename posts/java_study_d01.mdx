@@ -1,0 +1,125 @@
+---
+title: java 01 인터페이스와 추상클래스
+description: 인터페이스와 추상 클래스1
+date: 2024-06-13
+---
+### 추상 vs. 구상
+- 추상클래스 : 아무도 그 클래스의 새로운 인스턴스를 만들 수 없는 클래스. 반드시 확장해야 하는 클래스를 의미. (확장하지 않으면 거의 쓸모 없음. 실제 실행 중 일을 처리하는 것은 추상 클래스의 하위클래스 인스턴스가 함)
+- 추상메서드 : 반드시 오버라이드[^1] 해야 하는 메서드를 의미. 추상 클래스의 행동 가운데 일부에 대해 더 구체적인 하위 클래스에서 구현되지 않는 이상, 전혀 의미가 없는 경우 
+  ``` java
+  public abstract void eat();
+  // 이것처럼 몸통이 없이 머리만 있음 ! 
+  // 구상클래스에서 모든 추상 메서드를 구현해야 함. (너의 할일)
+  ```
+  - 추상메서드를 만들 때는 클래스도 반드시 추상 클래스로 만들어야 함. 
+  - 사용목적 : (일련의 하위 클래스를 위한 프로토콜의 일부를 정의하는 것. )
+  
+[^1]: 오버라이드 : (다형성) 상위 클래스에서 정의한 다형성 계약이행. 메서드의 인자와 리턴타입을 동일하게 해야 함. * 오버로딩 : 이름은 같지만 인자 목록이 다른 메서드 두 개를 만드는 것. (다형성과 관련 없음)
+
+#### 다형성 example 
+ Dog 배열을 만들어 Dog 객체를 집어넣기 
+```java
+public class MyDogList {
+  private Dog[] dogs new Dog[5]; //Dog 배열을 사용
+  private int nextIndex = 0; // 새로운 Dog가 추가될 때마다 이 값을 증가시킴 
+
+  public void add(Dog d) {
+    if (nextIndex < dogs.lengths){
+      dogs[nextIndex] d;
+      System.out.println("Dog added at " + nextIndex);
+      nextIndex++;
+    }
+  }
+}
+```
+
+ Cat 객체도 집어넣기?
+```java
+public class MyAnimalList {
+  private Animal[] animals new Animal[5]; // Dog => Animal 배열을 사용
+  private int nextIndex = 0; // 새로운 Dog가 추가될 때마다 이 값을 증가시킴 
+
+  public void add(Animal a) {
+    if (nextIndex < animals.lengths){
+      animals[nextIndex] a;
+      System.out.println("Animal added at " + nextIndex);
+      nextIndex++;
+    }
+  }
+}
+```
+
+```java
+public class AnimalTestDrive{
+  public static void main(String[] args) {
+    MyAnimalList list = new MyAnimalList();
+    Dog d = new Dog();
+    Cat c = new Cat();
+    list.add(d);
+    list.add(c);
+  }
+}
+```
+
+### Object 클래스
+- 모든 클래스의 어머니, 모든 것의 상위 클래스
+- 명시적으로 다른 클래스를 확장하지 않은 클래스는 자동으로 Object를 확장한 클래스로 정의됨.
+  - 아래 메서드는 Object에서 정의된 메서드이기 때문에 모든 클래스에서 따로 정의하지 않아도 사용할 수 있다 
+  - 다만, hashCode(), equals(), toString() 메서드는 오버라이드 하는 것이 좋음 !!
+
+  |타입|메서드|설명|
+  |--|--|--|
+  |boolean | `equals()` | 어떤 객체가 다른 객체와 같은지 알아내기 위한 메서드|
+  |Class | `getClass()`|  그 객체의 실제 클래스 타입을 알려주는 메서드|
+  |int | `hashCode()` | 객체를 해시테이블에 집어넣는데 필요한 객체의 해시코드를 알려주는 메서드|
+  |String | `toString()` | 그 객체의 내용에 해당하는 문자열 메시지를 출력하는 메서드 |
+
+  ```java
+  /* 객체 레퍼런스를 실제 타입으로 캐스트 하는 방법 */
+  Object o = al.get(index);
+  if(o instanceof Dog) { // Dog인지 아닌지 모를 때 확인하는 방법. 
+      Dog d = (Dog) 0 ; //객체를 원래대로 Dog으로 캐스트 함.
+      d.roam();
+  }
+  ```
+
+  ### 정리
+  1. 자바에서 레퍼런스 변수의 클래스에 들어있는 메서드를 사용한다. 
+  2. 어떤 객체에 있는 메서드를 호출하려면 그 메서드가 레퍼런스 변수의 클래스에 들어있어야만 한다. 
+  3. 클래스에 들어있는 public으로 지정된 메서드는 계약서, 즉 어떤 일을 할 수 있는지에 대한 외부와의 약속.
+  4. 상속은 여러가지 공통적인 특징을 가진 경우에 유용하게  사용할 수 있지만 ! 부모는 유일해야 하는 단점이 ..
+    - 어떤 클래스를 다형적인 타입으로 사용하면 같은 상속 트리에 속한 타입만 집어넣을 수 있음. 
+    - 다른 상속 트리에 들어 있는 것은 사용 할 수 없고 바로 그 다형적 타입의 하위 클래스로 만든 객체만 사용할 수 있음. 
+
+####  => 이런 단점의 해결책 : 인터페이스 
+1. 인터페이스를 다형적인 타입으로 사용하면 어떤 상속트리에 있는 객체도 집어넣을 수 있음. 
+2. 서로 다른 상속 트리에 들어있는 클래스에서 공통적인 인터페이스를 구현할 수 있게 하는 것
+  - ex) Serializable 인터페이스 구현 : 객체에서 그 상태를 파일에 저장하기.
+  - ex) Runnalble 인터페이스 구현 : 객체에서 메서드들을 서로 다른 실행 스레드로 실행해보기.
+3. 한 클래스에서 인터페이스 여러 개를 구현할 수 있음 (\<->확장은 한 개 밖에 할 수 없지만 구현은 여러개 가능!!)
+
+
+### 상위클래스 메서드를 호출하기 (super)
+
+## 인터페이스 
+모든 메서드가 추상메서드로 구성된 클래스 (주된 목적은 다형성)
+- 인터페이스가 있으면 클래스가 반드시 상속트리 하나로부터 나오지 않아도 됨.
+- 객체를 그 인스턴스의 클래스 타입이 아닌, 그 역할을 기준으로 처리할 수 있음. 
+
+```java
+public interface Pet{ // Class 자리에 interface가 들어간다! 
+  public abstract void beFriendly(); // 추상메서드 구체적으로 뭐할지는 여기서 안정함.
+  public abstract void play();
+}
+``` 
+- 하위 클래스에서 반드시 구현해야 한다
+
+```java
+public class Dog extends Canine implements Pet {
+  public void beFriendly(){ ...} //구현해야 하는 메서드 
+  public void play(){...}
+
+  public void roam(){...}
+  public void eat(){...}
+}
+```
